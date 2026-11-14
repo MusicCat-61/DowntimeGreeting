@@ -7,6 +7,7 @@ using DowntimeGreeting.Common;
 using DowntimeGreeting.Localization;
 using DowntimeGreeting.Models;
 using DowntimeGreeting.Services;
+using DowntimeGreeting.Updates;
 using Serilog;
 
 namespace DowntimeGreeting;
@@ -49,12 +50,19 @@ public partial class App : Application
     /// <summary>Имя события «активировать главное окно» для передачи запроса первому экземпляру.</summary>
     private const string ActivateWindowEventName = @"Local\DowntimeGreeting.ActivateWindow";
 
+    /// <summary>Интервал между обычными проверками обновлений при запуске.</summary>
+    private static readonly TimeSpan NormalCheckInterval = TimeSpan.FromHours(12);
+
+    /// <summary>Интервал повторной попытки после неудачной проверки обновлений.</summary>
+    private static readonly TimeSpan RetryAfterFailureInterval = TimeSpan.FromMinutes(30);
+
     private Mutex? _instanceMutex;
     private EventWaitHandle? _showGreetingEvent;
     private EventWaitHandle? _activateWindowEvent;
     private GreetingWindow? _greetingWindow;
     private string? _lastPhrase;
     private bool _isGreetMode;
+    private readonly CancellationTokenSource _updateCancellation = new();
 
     /// <summary>Текущая конфигурация приложения.</summary>
     public AppConfig Config { get; private set; } = new();
@@ -128,6 +136,10 @@ public partial class App : Application
 
         StartInstanceListener();
 
+        // Отчёт предыдущей попытки установки читается до показа окон: если скрипт подмены
+        // не справился, пользователь узнает об этом, а не будет искать причину сам.
+        ReportPreviousUpdate();
+
         if (_isGreetMode)
         {
             _ = ShowGreetingAsync();
@@ -137,6 +149,79 @@ public partial class App : Application
             var window = new MainWindow(Config);
             MainWindow = window;
             window.Show();
+
+            // Проверка обновлений — только в главном окне и только в фоне: плашка при входе
+            // в систему не должна ждать сеть.
+            _ = RunStartupUpdateCheckAsync();
+        }
+    }
+
+    /// <summary>
+    /// Читает отчёт скрипта подмены exe от предыдущего запуска и сообщает результат.
+    /// </summary>
+    private void ReportPreviousUpdate()
+    {
+        UpdateApplyReport? report = UpdateService.ConsumeLastApplyReport();
+
+        if (report is null)
+        {
+            return;
+        }
+
+        // Успешная установка уже видна по номеру версии в окне «О программе», поэтому
+        // сообщаем только о неудаче: молчаливый сбой выглядит как «обновление не пришло».
+        if (!report.Succeeded)
+        {
+            Log.Warning("Предыдущая установка обновления не удалась: {Detail}", report.Detail);
+        }
+    }
+
+    /// <summary>
+    /// Проверяет обновления при запуске, соблюдая интервал между запросами.
+    /// </summary>
+    /// <remarks>
+    /// Время последней проверки сохраняется в профиле пользователя, поэтому частые запуски
+    /// не создают лишних обращений к GitHub. Ошибки сети не показываются: они попадают в журнал.
+    /// </remarks>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
+    private async Task RunStartupUpdateCheckAsync()
+    {
+        try
+        {
+            UpdateService.LoadState();
+
+            if (!UpdateService.IsCheckDue(NormalCheckInterval, RetryAfterFailureInterval))
+            {
+                Log.Debug("Проверка обновлений не требуется: недавно выполнялась");
+                return;
+            }
+
+            // Небольшая задержка, чтобы окно успело отрисоваться до сетевого запроса.
+            await Task.Delay(TimeSpan.FromSeconds(3), _updateCancellation.Token).ConfigureAwait(true);
+
+            UpdateCheckResult result = await UpdateService
+                .CheckAsync(_updateCancellation.Token)
+                .ConfigureAwait(true);
+
+            if (!result.HasUpdate || result.Latest is null)
+            {
+                return;
+            }
+
+            Log.Information("Доступно обновление {Version}", result.Latest);
+
+            if (MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.ShowUpdateAvailable(result);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Приложение закрывается.
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Фоновая проверка обновлений не удалась");
         }
     }
 
@@ -197,6 +282,9 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         Log.Information("Завершение работы, код выхода {ExitCode}", e.ApplicationExitCode);
+
+        _updateCancellation.Cancel();
+        _updateCancellation.Dispose();
 
         _showGreetingEvent?.Dispose();
         _activateWindowEvent?.Dispose();
@@ -306,6 +394,14 @@ public partial class App : Application
                         isLight: false,
                         language,
                         () => new AboutWindow(previewMode: true));
+
+                    // Окно обновления: показываем предложение установить новую версию.
+                    RenderPreviewFile(
+                        $"update{suffix}.png",
+                        outputDirectory,
+                        isLight: false,
+                        language,
+                        () => new UpdateWindow(DemoUpdateResult, previewMode: true));
                 }
             }
             finally
@@ -321,6 +417,56 @@ public partial class App : Application
         {
             Log.Error(ex, "Не удалось отрисовать превью");
             return 1;
+        }
+    }
+
+    /// <summary>
+    /// Демонстрационный результат проверки обновлений для отрисовки превью.
+    /// </summary>
+    private static UpdateCheckResult DemoUpdateResult
+    {
+        get
+        {
+            ReleaseVersion latest = ReleaseVersion.TryParse("1.4.0", out ReleaseVersion parsed)
+                ? parsed
+                : default;
+
+            return new UpdateCheckResult
+            {
+                Status = UpdateStatus.UpdateAvailable,
+                Current = UpdateService.CurrentVersion,
+                Latest = latest,
+                Tag = "v1.4.0",
+                ReleaseUrl = $"{AppInfo.RepositoryUrl}/releases/tag/v1.4.0",
+                AssetSize = 61_790_571,
+                Notes = """
+                    # Русский
+
+                    ### Что нового
+
+                    - Переключатель языка RU / EN прямо в заголовке окна
+                    - Фразы плашки задаются отдельно для каждого языка
+                    - Акцентный цвет: колесо и ползунок яркости
+
+                    ### Исправлено
+
+                    - Кнопки автозагрузки больше не срабатывают повторно
+                    - Белый акцентный цвет больше не скрывает текст кнопок
+
+                    # English
+
+                    ### What is new
+
+                    - RU / EN language switch right in the title bar
+                    - Plaque phrases are configured per language
+                    - Accent color: wheel and brightness slider
+
+                    ### Fixed
+
+                    - Autostart buttons no longer fire repeatedly
+                    - A white accent no longer hides the button labels
+                    """
+            };
         }
     }
 

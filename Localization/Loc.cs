@@ -123,8 +123,15 @@ public static class Loc
     /// <param name="key">Ключ ресурса с плейсхолдерами <c>{0}</c>, <c>{1}</c>…</param>
     /// <param name="arguments">Аргументы подстановки.</param>
     /// <returns>Отформатированный текст.</returns>
+    /// <remarks>
+    /// Числа форматируются в культуре выбранного языка, а не системы: иначе английский интерфейс
+    /// показывал бы «58,9 МБ» с русской запятой.
+    /// </remarks>
     public static string F(string key, params object?[] arguments) =>
-        string.Format(CultureInfo.CurrentCulture, T(key), arguments);
+        string.Format(CurrentCulture, T(key), arguments);
+
+    /// <summary>Культура, соответствующая выбранному языку интерфейса.</summary>
+    public static CultureInfo CurrentCulture => CultureInfo.GetCultureInfo(Current == AppLanguage.Ru ? "ru-RU" : "en-US");
 
     private static bool IsRussian(CultureInfo culture) =>
         culture.TwoLetterISOLanguageName.Equals("ru", StringComparison.OrdinalIgnoreCase);

@@ -15,7 +15,6 @@ namespace DowntimeGreeting;
 /// </summary>
 public partial class AboutWindow : Window
 {
-    private readonly UpdateService _updateService = new();
     private readonly bool _previewMode;
 
     private string? _releaseUrl;
@@ -34,7 +33,7 @@ public partial class AboutWindow : Window
 
         InitializeComponent();
 
-        VersionText.Text = Loc.F("L_AboutVersionFormat", UpdateService.CurrentVersion);
+        VersionText.Text = Loc.F("L_AboutVersionFormat", UpdateService.CurrentVersionText);
 
         if (previewMode)
         {
@@ -70,7 +69,7 @@ public partial class AboutWindow : Window
 
         try
         {
-            UpdateCheckResult result = await _updateService.CheckAsync();
+            UpdateCheckResult result = await UpdateService.CheckAsync();
 
             _releaseUrl = result.ReleaseUrl;
 
@@ -83,6 +82,13 @@ public partial class AboutWindow : Window
                 case UpdateStatus.UpdateAvailable:
                     UpdateStatusText.Text = Loc.F("L_UpdAvailableFormat", result.Latest?.ToString() ?? "?");
                     OpenReleaseButton.Visibility = Visibility.Visible;
+
+                    // Модальное окно предлагает скачать и установить обновление сразу.
+                    if (UpdateWindow.ShowModal(this, result))
+                    {
+                        Application.Current.Shutdown();
+                    }
+
                     break;
 
                 case UpdateStatus.NoReleases:
@@ -169,7 +175,7 @@ public partial class AboutWindow : Window
     /// </summary>
     private void OnLanguageChanged()
     {
-        VersionText.Text = Loc.F("L_AboutVersionFormat", UpdateService.CurrentVersion);
+        VersionText.Text = Loc.F("L_AboutVersionFormat", UpdateService.CurrentVersionText);
         UpdateStatusText.Text = Loc.T("L_UpdIdle");
         OpenReleaseButton.Visibility = Visibility.Collapsed;
         _releaseUrl = null;

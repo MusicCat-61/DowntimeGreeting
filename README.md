@@ -46,6 +46,10 @@
 
 ![О программе](docs/about.png)
 
+Модальное окно обновления:
+
+![Окно обновления](docs/update.png)
+
 ## Источники данных о простое
 
 Простой = «момент текущего включения» − «момент последнего выключения».
@@ -142,10 +146,30 @@ single-file, сжатый). Рядом ничего не нужно: настр�
 
 ## Обновления
 
-Проверка выполняется **только по кнопке** в окне «О программе» — приложение не обращается
-к сети при запуске. Используется GitHub Releases API: если тег последнего релиза старше
-текущей версии, показывается кнопка перехода на страницу релиза. Автоматической загрузки
-и установки нет.
+Проверка выполняется **при запуске в фоне** (главное окно), но не чаще раза в 12 часов:
+время последней проверки хранится в `%LOCALAPPDATA%\DowntimeGreeting\update-state.json`,
+поэтому частые перезапуски не создают лишних запросов. После ошибки повтор — через 30 минут.
+Режим `--greet` к сети не обращается вообще: плашка при входе в систему не ждёт интернет.
+
+Если версия новее установленной, открывается **модальное окно обновления**: заметки к релизу
+с оформлением (заголовки, списки, выделение), текущая и доступная версии, три действия —
+«Скачать и установить», «Открыть страницу релиза», «Позже».
+
+Порядок установки:
+
+1. Файл скачивается рядом с exe с индикатором прогресса (`.part`, докачка при обрыве).
+2. Размер сверяется с заявленным в релизе, при наличии `DowntimeGreeting.exe.sha256` —
+   контрольная сумма SHA-256.
+3. Проверяется заголовок `MZ` и то, что сборка не старше установленной.
+4. Приложение закрывается, отдельный `cmd`-скрипт заменяет exe (с повторами и `taskkill`,
+   если файл остался заблокирован) и запускает приложение заново.
+5. Отчёт скрипта читается при следующем старте; неудача попадает в журнал.
+
+Проверка по кнопке в окне «О программе» тоже работает — она открывает то же модальное окно.
+
+Для публикации релиза приложите к нему два файла: `DowntimeGreeting.exe` и
+`DowntimeGreeting.exe.sha256` (второй создаёт `publish.bat`). Без файла контрольной суммы
+установка тоже работает, но проверяется только размер и заголовок `MZ`.
 
 ## Командная строка
 
@@ -182,7 +206,8 @@ DowntimeGreeting/
 ├── App.xaml / App.xaml.cs       # режимы запуска, единственный экземпляр, логи, тема
 ├── MainWindow.xaml(.cs)         # главное окно: автозагрузка, настройки, предпросмотр
 ├── GreetingWindow.xaml(.cs)     # плашка с анимацией и обратным отсчётом
-├── AboutWindow.xaml(.cs)        # «О программе»: описание, ссылки, обновления
+├── AboutWindow.xaml(.cs)        # «О программе»: описание, ссылки, проверка обновлений
+├── UpdateWindow.xaml(.cs)       # модальное окно обновления: заметки, загрузка, установка
 ├── Common/
 │   ├── AppInfo.cs               # ссылки на репозиторий, Telegram, донат
 │   ├── AppPaths.cs              # пути в %LOCALAPPDATA%
@@ -207,7 +232,8 @@ DowntimeGreeting/
 │   └── IconGenerator.cs         # генерация .ico
 ├── Updates/
 │   ├── ReleaseVersion.cs        # разбор и сравнение версий
-│   └── UpdateService.cs         # проверка релизов GitHub
+│   ├── ReleaseNotesFormatter.cs # разметка заметок к релизу
+│   └── UpdateService.cs         # проверка, загрузка и установка обновлений
 ├── Interop/
 │   ├── BlurHelper.cs            # P/Invoke: DWM
 │   └── KeyboardHook.cs          # P/Invoke: WH_KEYBOARD_LL для Esc
@@ -221,9 +247,10 @@ DowntimeGreeting/
 
 ## Приватность
 
-Приложение работает офлайн. Единственный сетевой запрос — проверка обновлений, и только
-после нажатия кнопки в окне «О программе». Телеметрии нет, фоновых процессов нет:
-после показа плашки процесс завершается.
+Приложение работает офлайн. Сеть используется только для проверки обновлений и загрузки
+новой версии: проверка идёт в фоне при запуске главного окна (не чаще раза в 12 часов),
+загрузка — только после явного согласия в модальном окне. Телеметрии нет, фоновых процессов
+нет: после показа плашки процесс завершается.
 
 ---
 
@@ -276,9 +303,30 @@ Remove it with **Remove from autostart** or `.\Uninstall-Task.ps1`.
 
 ### Updates
 
-Update checks run **only** when you press the button in the About window. The app calls the
-GitHub Releases API and, if a newer tag exists, offers a link to the release page. Nothing is
-downloaded or installed automatically.
+Checks run **in the background on startup** (main window only), at most once every 12 hours:
+the last check time is kept in `%LOCALAPPDATA%\DowntimeGreeting\update-state.json`, so frequent
+restarts cause no extra requests. After a failure the next attempt is 30 minutes later.
+The `--greet` mode never touches the network — the sign-in plaque does not wait for the internet.
+
+When a newer version exists, a **modal update window** opens with formatted release notes
+(headings, lists, emphasis), the installed and available versions, and three actions:
+"Download and install", "Open the release page", "Later".
+
+How the install works:
+
+1. The file is downloaded next to the exe with a progress bar (`.part`, resumed after a drop).
+2. The size is compared with the release, and the SHA-256 checksum when
+   `DowntimeGreeting.exe.sha256` is published.
+3. The `MZ` header is checked, along with the build not being older than the installed one.
+4. The app exits, a detached `cmd` script swaps the exe (with retries and `taskkill` if the file
+   is still locked) and starts the app again.
+5. The script's report is read on the next start; a failure is written to the log.
+
+The button in the About window still works — it opens the same modal window.
+
+To publish a release, attach two files: `DowntimeGreeting.exe` and
+`DowntimeGreeting.exe.sha256` (the latter is produced by `publish.bat`). Without the checksum
+file the install still works, but only the size and the `MZ` header are verified.
 
 ### Known limitations
 
@@ -293,5 +341,7 @@ downloaded or installed automatically.
 
 ### Privacy
 
-The app works offline. The only network request is the update check, and only after you press
-the button. No telemetry, no background processes: the process exits right after showing the plaque.
+The app works offline. The network is used only for update checks and downloading a new version:
+the check runs in the background when the main window starts (at most once every 12 hours),
+and the download happens only after you agree in the modal window. No telemetry, no background
+processes: the process exits right after showing the plaque.

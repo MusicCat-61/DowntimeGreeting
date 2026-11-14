@@ -97,4 +97,35 @@
 
     <sys:String x:Key="L_ErrorPhrasesEmptyLineFormat">Строка {0} пустая: удалите пустые строки между фразами.</sys:String>
 
+    <sys:String x:Key="L_UpdDownload">Скачать обновление</sys:String>
+    <sys:String x:Key="L_UpdDownloadingFormat">Загрузка… {0}%</sys:String>
+    <sys:String x:Key="L_UpdReadyFormat">Версия {0} скачана и проверена. Установить сейчас?</sys:String>
+    <sys:String x:Key="L_UpdInstall">Установить и перезапустить</sys:String>
+    <sys:String x:Key="L_UpdRestarting">Приложение закроется, заменит файл и запустится снова…</sys:String>
+    <sys:String x:Key="L_UpdAppliedOkFormat">Обновление установлено. Текущая версия {0}.</sys:String>
+    <sys:String x:Key="L_UpdAppliedFailedFormat">Не удалось установить обновление: {0}</sys:String>
+    <sys:String x:Key="L_UpdNoAssetFormat">В релизе нет файла {0}.</sys:String>
+    <sys:String x:Key="L_UpdNotDownloadable">Обновление недоступно для скачивания.</sys:String>
+    <sys:String x:Key="L_UpdFolderNotWritable">Каталог приложения недоступен для записи: {0}. Перенесите exe в свою папку или скачайте релиз вручную.</sys:String>
+    <sys:String x:Key="L_UpdChecksumMismatch">Контрольная сумма скачанного файла не совпала.</sys:String>
+    <sys:String x:Key="L_UpdBadChecksumFile">Файл контрольной суммы в релизе некорректен.</sys:String>
+    <sys:String x:Key="L_UpdTooSmallFormat">Скачанный файл слишком мал для сборки ({0} байт).</sys:String>
+    <sys:String x:Key="L_UpdSizeMismatchFormat">Скачано {0} байт, а в релизе указано {1}.</sys:String>
+    <sys:String x:Key="L_UpdNotExecutable">Скачанный файл не является исполняемым файлом Windows.</sys:String>
+    <sys:String x:Key="L_UpdOlderFormat">Скачанная сборка {0} старше установленной {1}.</sys:String>
+    <sys:String x:Key="L_UpdStagedGone">Скачанный файл обновления исчез.</sys:String>
+    <sys:String x:Key="L_UpdStagedChanged">Скачанный файл изменился после проверки.</sys:String>
+    <sys:String x:Key="L_UpdDownloadStoppedFormat">Загрузка остановилась на {0} из {1} байт.</sys:String>
+    <sys:String x:Key="L_UpdCheckOnStartup">Проверяем обновления в фоне…</sys:String>
+    <sys:String x:Key="L_UpdDismiss">Скрыть</sys:String>
+    <sys:String x:Key="L_UpdBannerTitleFormat">Доступно обновление {0}</sys:String>
+    <sys:String x:Key="L_UpdBannerInstalledFormat">Установлена версия {0}.</sys:String>
+    <sys:String x:Key="L_UpdInstallStarted">Загрузка началась. Плашку можно закрыть — загрузка продолжится.</sys:String>
+    <sys:String x:Key="L_UpdAvailableTitleFormat">Доступно обновление {0}</sys:String>
+    <sys:String x:Key="L_UpdVersionLineFormat">Установлена {0} · доступна {1}</sys:String>
+    <sys:String x:Key="L_UpdIntro">Новая версия скачается в папку приложения, проверится и заменит текущий файл.</sys:String>
+    <sys:String x:Key="L_UpdReadyToDownloadFormat">Файл обновления: {0}.</sys:String>
+    <sys:String x:Key="L_UpdInstallNow">Скачать и установить</sys:String>
+    <sys:String x:Key="L_UpdLater">Позже</sys:String>
+    <sys:String x:Key="L_UpdSizeFormat">{0:F1} МБ</sys:String>
 </ResourceDictionary>

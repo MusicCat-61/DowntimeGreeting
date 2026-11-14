@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,7 @@ using DowntimeGreeting.Common;
 using DowntimeGreeting.Localization;
 using DowntimeGreeting.Models;
 using DowntimeGreeting.Services;
+using DowntimeGreeting.Updates;
 using Serilog;
 
 namespace DowntimeGreeting;
@@ -470,6 +472,23 @@ public partial class MainWindow : Window
         }
     }
 
+    /// <summary>
+    /// Показывает модальное окно обновления и закрывает приложение, если запущена установка.
+    /// </summary>
+    /// <param name="result">Результат проверки, в котором есть новая версия.</param>
+    public void ShowUpdateAvailable(UpdateCheckResult result)
+    {
+        if (!result.HasUpdate)
+        {
+            return;
+        }
+
+        if (UpdateWindow.ShowModal(this, result))
+        {
+            // Скрипт подмены уже запущен и ждёт выхода процесса.
+            Application.Current.Shutdown();
+        }
+    }
     /// <summary>
     /// Обработчик кнопки «Открыть логи».
     /// </summary>

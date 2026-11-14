@@ -18,6 +18,15 @@ public static class AppPaths
     /// <summary>Имя файла настроек.</summary>
     public const string SettingsFileName = "appsettings.json";
 
+    /// <summary>Имя файла с состоянием проверки обновлений.</summary>
+    public const string UpdateStateFileName = "update-state.json";
+
+    /// <summary>Имя скрипта, который подменяет exe после выхода приложения.</summary>
+    public const string ApplyScriptFileName = "apply-update.cmd";
+
+    /// <summary>Имя файла отчёта о подмене exe.</summary>
+    public const string ApplyLogFileName = "apply-update.log";
+
     /// <summary>
     /// Возвращает корневой каталог данных приложения.
     /// </summary>
@@ -37,4 +46,22 @@ public static class AppPaths
     /// </summary>
     /// <returns>Путь вида <c>...\DowntimeGreeting\appsettings.json</c>.</returns>
     public static string GetSettingsPath() => Path.Combine(GetApplicationDirectory(), SettingsFileName);
+
+    /// <summary>
+    /// Возвращает путь к файлу состояния проверки обновлений.
+    /// </summary>
+    /// <returns>Путь вида <c>...\DowntimeGreeting\update-state.json</c>.</returns>
+    public static string GetUpdateStatePath() => Path.Combine(GetApplicationDirectory(), UpdateStateFileName);
+
+    /// <summary>
+    /// Возвращает путь к скрипту подмены исполняемого файла.
+    /// </summary>
+    /// <returns>Путь вида <c>...\DowntimeGreeting\apply-update.cmd</c>.</returns>
+    public static string GetApplyScriptPath() => Path.Combine(GetApplicationDirectory(), ApplyScriptFileName);
+
+    /// <summary>
+    /// Возвращает путь к отчёту о подмене исполняемого файла.
+    /// </summary>
+    /// <returns>Путь вида <c>...\DowntimeGreeting\apply-update.log</c>.</returns>
+    public static string GetApplyLogPath() => Path.Combine(GetApplicationDirectory(), ApplyLogFileName);
 }

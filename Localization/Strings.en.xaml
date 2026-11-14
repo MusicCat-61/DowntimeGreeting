@@ -97,4 +97,35 @@
 
     <sys:String x:Key="L_ErrorPhrasesEmptyLineFormat">Line {0} is empty: remove blank lines between phrases.</sys:String>
 
+    <sys:String x:Key="L_UpdDownload">Download update</sys:String>
+    <sys:String x:Key="L_UpdDownloadingFormat">Downloading… {0}%</sys:String>
+    <sys:String x:Key="L_UpdReadyFormat">Version {0} is downloaded and verified. Install now?</sys:String>
+    <sys:String x:Key="L_UpdInstall">Install and restart</sys:String>
+    <sys:String x:Key="L_UpdRestarting">The app will close, replace the file and start again…</sys:String>
+    <sys:String x:Key="L_UpdAppliedOkFormat">Update installed. Current version {0}.</sys:String>
+    <sys:String x:Key="L_UpdAppliedFailedFormat">Could not install the update: {0}</sys:String>
+    <sys:String x:Key="L_UpdNoAssetFormat">The release has no {0} file.</sys:String>
+    <sys:String x:Key="L_UpdNotDownloadable">The update cannot be downloaded.</sys:String>
+    <sys:String x:Key="L_UpdFolderNotWritable">The application folder is not writable: {0}. Move the exe to a folder you own or download the release manually.</sys:String>
+    <sys:String x:Key="L_UpdChecksumMismatch">The downloaded file failed its checksum check.</sys:String>
+    <sys:String x:Key="L_UpdBadChecksumFile">The release checksum file is invalid.</sys:String>
+    <sys:String x:Key="L_UpdTooSmallFormat">The downloaded file is too small to be a build ({0} bytes).</sys:String>
+    <sys:String x:Key="L_UpdSizeMismatchFormat">Downloaded {0} bytes, but the release says {1}.</sys:String>
+    <sys:String x:Key="L_UpdNotExecutable">The downloaded file is not a Windows executable.</sys:String>
+    <sys:String x:Key="L_UpdOlderFormat">The downloaded build {0} is older than {1}.</sys:String>
+    <sys:String x:Key="L_UpdStagedGone">The downloaded update file is gone.</sys:String>
+    <sys:String x:Key="L_UpdStagedChanged">The downloaded file changed after verification.</sys:String>
+    <sys:String x:Key="L_UpdDownloadStoppedFormat">The download stopped at {0} of {1} bytes.</sys:String>
+    <sys:String x:Key="L_UpdCheckOnStartup">Checking for updates in the background…</sys:String>
+    <sys:String x:Key="L_UpdDismiss">Dismiss</sys:String>
+    <sys:String x:Key="L_UpdBannerTitleFormat">Update {0} is available</sys:String>
+    <sys:String x:Key="L_UpdBannerInstalledFormat">Installed version {0}.</sys:String>
+    <sys:String x:Key="L_UpdInstallStarted">Download started. You can close this window — the download continues.</sys:String>
+    <sys:String x:Key="L_UpdAvailableTitleFormat">Update {0} is available</sys:String>
+    <sys:String x:Key="L_UpdVersionLineFormat">Installed {0} · available {1}</sys:String>
+    <sys:String x:Key="L_UpdIntro">The new version will be downloaded into the app folder, verified and will replace the current file.</sys:String>
+    <sys:String x:Key="L_UpdReadyToDownloadFormat">Update file: {0}.</sys:String>
+    <sys:String x:Key="L_UpdInstallNow">Download and install</sys:String>
+    <sys:String x:Key="L_UpdLater">Later</sys:String>
+    <sys:String x:Key="L_UpdSizeFormat">{0:F1} MB</sys:String>
 </ResourceDictionary>

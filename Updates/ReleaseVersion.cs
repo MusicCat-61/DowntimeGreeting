@@ -110,6 +110,18 @@ public readonly partial struct ReleaseVersion : IComparable<ReleaseVersion>, IEq
     /// <returns><see langword="true"/>, если левая версия младше.</returns>
     public static bool operator <(ReleaseVersion left, ReleaseVersion right) => left.CompareTo(right) < 0;
 
+    /// <summary>Сравнивает две версии.</summary>
+    /// <param name="left">Левая версия.</param>
+    /// <param name="right">Правая версия.</param>
+    /// <returns><see langword="true"/>, если левая версия не старше правой.</returns>
+    public static bool operator <=(ReleaseVersion left, ReleaseVersion right) => left.CompareTo(right) <= 0;
+
+    /// <summary>Сравнивает две версии.</summary>
+    /// <param name="left">Левая версия.</param>
+    /// <param name="right">Правая версия.</param>
+    /// <returns><see langword="true"/>, если левая версия не младше правой.</returns>
+    public static bool operator >=(ReleaseVersion left, ReleaseVersion right) => left.CompareTo(right) >= 0;
+
     private static int ParseGroup(Match match, int group)
     {
         Group captured = match.Groups[group];
