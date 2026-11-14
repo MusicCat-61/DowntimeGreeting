@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using DowntimeGreeting.Common;
+using DowntimeGreeting.Interop;
 using DowntimeGreeting.Localization;
 using DowntimeGreeting.Services;
 using DowntimeGreeting.Updates;
@@ -18,6 +19,7 @@ public partial class AboutWindow : Window
     private readonly bool _previewMode;
 
     private string? _releaseUrl;
+    private UpdateCheckResult? _lastResult;
     private bool _isChecking;
 
     /// <summary>
@@ -42,12 +44,24 @@ public partial class AboutWindow : Window
             Top = PreviewRenderer.OffscreenCoordinate;
 
             // Программный рендер не поддерживает DropShadowEffect (даёт непрозрачную подложку).
+            Background = System.Windows.Media.Brushes.Transparent;
+            WindowBorder.CornerRadius = new CornerRadius(16);
             WindowBorder.Effect = null;
             return;
         }
 
         Loc.LanguageChanged += OnLanguageChanged;
         Closed += OnClosed;
+
+        // Окно непрозрачное (иначе размер не изменить), поэтому углы скругляет DWM.
+        Loaded += (_, _) => BlurHelper.TryApplyRoundedCorners(this);
+
+        // Фоновая проверка при запуске уже могла пройти: показываем её итог, а не общий текст.
+        if (UpdateService.LastResult is { } known)
+        {
+            _lastResult = known;
+            RenderStatus(known);
+        }
     }
 
     /// <summary>
@@ -71,33 +85,14 @@ public partial class AboutWindow : Window
         {
             UpdateCheckResult result = await UpdateService.CheckAsync();
 
+            _lastResult = result;
             _releaseUrl = result.ReleaseUrl;
+            RenderStatus(result);
 
-            switch (result.Status)
+            // Модальное окно предлагает скачать и установить обновление сразу.
+            if (result.Status == UpdateStatus.UpdateAvailable && UpdateWindow.ShowModal(this, result))
             {
-                case UpdateStatus.UpToDate:
-                    UpdateStatusText.Text = Loc.F("L_UpdUpToDateFormat", result.Latest?.ToString() ?? "?");
-                    break;
-
-                case UpdateStatus.UpdateAvailable:
-                    UpdateStatusText.Text = Loc.F("L_UpdAvailableFormat", result.Latest?.ToString() ?? "?");
-                    OpenReleaseButton.Visibility = Visibility.Visible;
-
-                    // Модальное окно предлагает скачать и установить обновление сразу.
-                    if (UpdateWindow.ShowModal(this, result))
-                    {
-                        Application.Current.Shutdown();
-                    }
-
-                    break;
-
-                case UpdateStatus.NoReleases:
-                    UpdateStatusText.Text = Loc.T("L_UpdNoReleaseYet");
-                    break;
-
-                default:
-                    UpdateStatusText.Text = result.Error ?? Loc.T("L_UpdFailed");
-                    break;
+                Application.Current.Shutdown();
             }
         }
         finally
@@ -171,14 +166,56 @@ public partial class AboutWindow : Window
     }
 
     /// <summary>
+    /// Показывает состояние проверки обновлений в окне.
+    /// </summary>
+    /// <param name="result">Последний результат проверки.</param>
+    private void RenderStatus(UpdateCheckResult result)
+    {
+        switch (result.Status)
+        {
+            case UpdateStatus.UpToDate:
+                UpdateStatusText.Text = Loc.F("L_UpdUpToDateFormat", result.Latest?.ToString() ?? "?");
+                OpenReleaseButton.Visibility = Visibility.Collapsed;
+                break;
+
+            case UpdateStatus.UpdateAvailable:
+                UpdateStatusText.Text = Loc.F("L_UpdAvailableFormat", result.Latest?.ToString() ?? "?");
+                OpenReleaseButton.Visibility = Visibility.Visible;
+                break;
+
+            case UpdateStatus.NoReleases:
+                UpdateStatusText.Text = Loc.T("L_UpdNoReleaseYet");
+                OpenReleaseButton.Visibility = Visibility.Collapsed;
+                break;
+
+            case UpdateStatus.Failed:
+                UpdateStatusText.Text = result.Error ?? Loc.T("L_UpdFailed");
+                OpenReleaseButton.Visibility = Visibility.Collapsed;
+                break;
+
+            default:
+                UpdateStatusText.Text = Loc.T("L_UpdIdle");
+                OpenReleaseButton.Visibility = Visibility.Collapsed;
+                break;
+        }
+    }
+
+    /// <summary>
     /// Обновляет тексты, заданные из кода, при смене языка.
     /// </summary>
     private void OnLanguageChanged()
     {
         VersionText.Text = Loc.F("L_AboutVersionFormat", UpdateService.CurrentVersionText);
-        UpdateStatusText.Text = Loc.T("L_UpdIdle");
-        OpenReleaseButton.Visibility = Visibility.Collapsed;
-        _releaseUrl = null;
+
+        // Язык меняется — перерисовываем тот же результат, а не сбрасываем его в общий текст.
+        if (_lastResult is { } known)
+        {
+            RenderStatus(known);
+        }
+        else
+        {
+            UpdateStatusText.Text = Loc.T("L_UpdIdle");
+        }
     }
 
     /// <summary>

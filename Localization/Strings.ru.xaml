@@ -73,7 +73,7 @@
     <!-- О программе -->
     <sys:String x:Key="L_AboutTitle">О программе</sys:String>
     <sys:String x:Key="L_AboutVersionFormat">Версия {0}</sys:String>
-    <sys:String x:Key="L_AboutDescription">Компактная плашка, которая появляется при входе в Windows и показывает, сколько времени компьютер был выключен. Работает офлайн, без фоновых процессов и телеметрии.</sys:String>
+    <sys:String x:Key="L_AboutDescription">Компактная плашка, которая появляется при входе в Windows и показывает, сколько времени компьютер был выключен. Считает простой по журналу событий, работает без фоновых процессов и без телеметрии.</sys:String>
     <sys:String x:Key="L_AboutProject">Репозиторий на GitHub</sys:String>
     <sys:String x:Key="L_AboutTelegram">Telegram-канал</sys:String>
     <sys:String x:Key="L_AboutDonate">Поддержать проект</sys:String>
@@ -81,7 +81,7 @@
 
     <!-- Обновления -->
     <sys:String x:Key="L_UpdTitle">ОБНОВЛЕНИЯ</sys:String>
-    <sys:String x:Key="L_UpdIdle">Проверка выполняется только по кнопке: приложение не обращается к сети при запуске.</sys:String>
+    <sys:String x:Key="L_UpdIdle">Проверка идёт в фоне при запуске приложения — не чаще раза в 12 часов. Кнопка ниже запускает её сразу.</sys:String>
     <sys:String x:Key="L_UpdCheck">Проверить обновления</sys:String>
     <sys:String x:Key="L_UpdChecking">Проверяем…</sys:String>
     <sys:String x:Key="L_UpdUpToDateFormat">Установлена последняя версия {0}.</sys:String>

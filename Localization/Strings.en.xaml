@@ -73,7 +73,7 @@
     <!-- About -->
     <sys:String x:Key="L_AboutTitle">About</sys:String>
     <sys:String x:Key="L_AboutVersionFormat">Version {0}</sys:String>
-    <sys:String x:Key="L_AboutDescription">A compact plaque that appears when Windows starts and shows how long the computer was off. Works fully offline, with no background processes and no telemetry.</sys:String>
+    <sys:String x:Key="L_AboutDescription">A compact plaque that appears when Windows starts and shows how long the computer was off. It reads the event log, runs without background processes and sends no telemetry.</sys:String>
     <sys:String x:Key="L_AboutProject">GitHub repository</sys:String>
     <sys:String x:Key="L_AboutTelegram">Telegram channel</sys:String>
     <sys:String x:Key="L_AboutDonate">Support the project</sys:String>
@@ -81,7 +81,7 @@
 
     <!-- Updates -->
     <sys:String x:Key="L_UpdTitle">UPDATES</sys:String>
-    <sys:String x:Key="L_UpdIdle">Checks run only when you press the button: the app does not touch the network on startup.</sys:String>
+    <sys:String x:Key="L_UpdIdle">Checks run in the background on startup, at most once every 12 hours. The button below runs one right now.</sys:String>
     <sys:String x:Key="L_UpdCheck">Check for updates</sys:String>
     <sys:String x:Key="L_UpdChecking">Checking…</sys:String>
     <sys:String x:Key="L_UpdUpToDateFormat">You have the latest version {0}.</sys:String>

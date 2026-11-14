@@ -158,6 +158,58 @@ public static class BlurHelper
         return dwmBlurApplied || accentApplied;
     }
 
+    /// <summary>Атрибут DWM: предпочтение по скруглению углов окна.</summary>
+    private const int DwmWindowCornerPreference = 33;
+
+    /// <summary>Значение атрибута: скруглять углы.</summary>
+    private const int DwmWindowCornerRound = 2;
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr window, int attribute, ref int value, int size);
+
+    /// <summary>
+    /// Включает скругление углов окна средствами DWM (Windows 11).
+    /// </summary>
+    /// <param name="window">Окно приложения.</param>
+    /// <returns>
+    /// <see langword="true"/>, если система применила скругление; на Windows 10 вызов
+    /// возвращает <see langword="false"/>, и окно остаётся с прямыми углами.
+    /// </returns>
+    /// <remarks>
+    /// Слоистое окно (<see cref="Window.AllowsTransparency"/> = <see langword="true"/>) скругляется
+    /// собственной маской в XAML, но размер такого окна изменить нельзя. Поэтому главное окно
+    /// непрозрачное, а форму ему задаёт DWM.
+    /// </remarks>
+    public static bool TryApplyRoundedCorners(Window window)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+
+        try
+        {
+            IntPtr handle = new WindowInteropHelper(window).Handle;
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            int preference = DwmWindowCornerRound;
+            int result = DwmSetWindowAttribute(handle, DwmWindowCornerPreference, ref preference, sizeof(int));
+
+            if (result != 0)
+            {
+                Log.Debug("Скругление углов недоступно (код {Code}) — вероятно, Windows 10", result);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException)
+        {
+            Log.Debug("DWM не поддерживает скругление углов");
+            return false;
+        }
+    }
+
     /// <summary>
     /// Включает размытие через DWM и растягивает стеклянную рамку на весь клиент.
     /// </summary>

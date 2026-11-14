@@ -3,8 +3,8 @@
 **RU** · [English below](#english)
 
 Приветственная «стеклянная» плашка для Windows 10/11: появляется при входе в систему и показывает,
-сколько времени компьютер был выключен. Работает полностью офлайн — без фоновых процессов,
-без телеметрии и без сетевых запросов при запуске.
+сколько времени компьютер был выключен. Не требует интернета: единственный сетевой запрос —
+проверка обновлений в фоне, и только в главном окне. Телеметрии нет, фоновых процессов нет.
 
 ![Плашка в тёмной теме](docs/plaque-dark.png)
 
@@ -23,6 +23,7 @@
   отдельно для каждого языка.
 * **Главное окно**: автозагрузка, предпросмотр, секунды до закрытия (слайдер), акцентный цвет
   (цветовое колесо + ползунок яркости), список фраз, папка логов, окно «О программе».
+  Размер окна меняется перетаскиванием за любой край или угол (минимум 600×620).
 * **Один exe**: публикуется единственный self-contained файл, иконка встроена в него.
 * **Логирование** Serilog в `%LOCALAPPDATA%\DowntimeGreeting\logs\`, хранение 7 дней.
 
@@ -186,9 +187,10 @@ single-file, сжатый). Рядом ничего не нужно: настр�
 * **Права на журнал событий.** Если чтение канала `System` закрыто политикой, используется
   WMI-фолбэк — но момент *выключения* из WMI не получить, поэтому плашка покажет
   «Не удалось определить простой».
-* **Размытие фона.** Окно слоистое (`AllowsTransparency="True"`), поэтому DWM не композитирует
-  настоящее размытие. «Стекло» создаётся полупрозрачным фоном, бликом и тенью;
-  `DwmEnableBlurBehindWindow` вызывается и вступит в силу для не слоистого окна.
+* **Размытие фона.** Плашка слоистая (`AllowsTransparency="True"`), поэтому DWM не композитирует
+  настоящее размытие: «стекло» создаётся полупрозрачным фоном, бликом и тенью. Главное окно
+  и диалоги непрозрачные — иначе их размер нельзя было бы изменить; углы им скругляет DWM
+  (Windows 11), а на Windows 10 они остаются прямыми.
 * **Антивирусы.** Автозапуск через Планировщик иногда вызывает ложное срабатывание эвристики.
   Добавьте каталог приложения в исключения.
 * **Многомониторность.** Плашка показывается только на основном мониторе.
@@ -257,8 +259,8 @@ DowntimeGreeting/
 ## English
 
 A glass-style welcome plaque for Windows 10/11 that appears when you sign in and shows how long
-the computer was off. Fully offline: no background processes, no telemetry, and no network
-requests on startup.
+the computer was off. No internet required: the only network request is a background update check,
+and only in the main window. No telemetry, no background processes.
 
 ### Features
 
@@ -271,7 +273,8 @@ requests on startup.
 * **Windows theme** read from the registry (`AppsUseLightTheme`).
 * **Interface language** — RU / EN toggle in the title bar. Plaque phrases are kept per language.
 * **Main window**: autostart, preview, auto-close seconds, accent color (color wheel + brightness),
-  phrase list, log folder, About window.
+  phrase list, log folder, About window. The window is resizable by dragging any edge or corner
+  (minimum 600×620).
 * **Single exe**: one self-contained file with the icon embedded.
 * **Logging** via Serilog to `%LOCALAPPDATA%\DowntimeGreeting\logs\`, kept for 7 days.
 
@@ -332,8 +335,10 @@ file the install still works, but only the size and the `MZ` header are verified
 
 * **Event log permissions.** If reading the `System` channel is blocked, the WMI fallback cannot
   recover the *shutdown* time, so the plaque reports "Could not determine the downtime".
-* **Background blur.** The window is layered (`AllowsTransparency="True"`), so DWM does not
+* **Background blur.** The plaque is layered (`AllowsTransparency="True"`), so DWM does not
   composite real blur; the glass look comes from the translucent background, sheen and shadow.
+  The main window and the dialogs are opaque — a layered window cannot be resized — and DWM rounds
+  their corners on Windows 11 (on Windows 10 the corners stay square).
 * **Antivirus.** Task Scheduler autostart can trip heuristics — add the app folder to exclusions.
 * **Multiple monitors.** The plaque is shown on the primary monitor only.
 * **Single instance.** A second launch activates the existing window or forwards a "show plaque"

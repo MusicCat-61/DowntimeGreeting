@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using DowntimeGreeting.Common;
+using DowntimeGreeting.Interop;
 using DowntimeGreeting.Localization;
 using DowntimeGreeting.Services;
 using DowntimeGreeting.Updates;
@@ -71,6 +72,8 @@ public partial class UpdateWindow : Window
             WindowStartupLocation = WindowStartupLocation.Manual;
             Left = PreviewRenderer.OffscreenCoordinate;
             Top = PreviewRenderer.OffscreenCoordinate;
+            Background = System.Windows.Media.Brushes.Transparent;
+            WindowBorder.CornerRadius = new CornerRadius(16);
             WindowBorder.Effect = null;
             StatusText.Text = Loc.F("L_UpdReadyToDownloadFormat", FormatSize(result.AssetSize));
             return;
@@ -78,6 +81,9 @@ public partial class UpdateWindow : Window
 
         Loc.LanguageChanged += OnLanguageChanged;
         Closed += OnClosed;
+
+        // Окно непрозрачное (иначе размер не изменить), поэтому углы скругляет DWM.
+        Loaded += (_, _) => BlurHelper.TryApplyRoundedCorners(this);
 
         // Ранее скачанное обновление сразу предлагается к установке.
         _prepared = UpdateService.FindPreparedUpdate();

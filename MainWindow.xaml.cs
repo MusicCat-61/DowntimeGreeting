@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using DowntimeGreeting.Common;
+using DowntimeGreeting.Interop;
 using DowntimeGreeting.Localization;
 using DowntimeGreeting.Models;
 using DowntimeGreeting.Services;
@@ -71,7 +72,11 @@ public partial class MainWindow : Window
             StatusHintText.Text = Loc.F("L_StartupRegisteredFormat", _taskScheduler.TaskName);
             StatusDot.Fill = (Brush)Application.Current.Resources[ThemeResourceKeys.Accent];
 
-            // Программный рендер не поддерживает DropShadowEffect (даёт непрозрачную подложку).
+            // В живом окне углы скругляет DWM, а программный рендер его не видит: для превью
+            // форму задаёт маска Border, поэтому фон самого окна должен быть прозрачным.
+            // Тень отключена: DropShadowEffect не поддерживается RenderTargetBitmap.
+            Background = Brushes.Transparent;
+            WindowBorder.CornerRadius = new CornerRadius(16);
             WindowBorder.Effect = null;
         }
         else
@@ -231,6 +236,9 @@ public partial class MainWindow : Window
             // Превью: статус уже выставлен в конструкторе, Планировщик не опрашиваем.
             return;
         }
+
+        // Окно непрозрачное (иначе размер не изменить), поэтому углы скругляет DWM.
+        BlurHelper.TryApplyRoundedCorners(this);
 
         _ = InitializeTaskStatusAsync();
     }
