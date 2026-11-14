@@ -147,10 +147,8 @@ single-file, сжатый). Рядом ничего не нужно: настр�
 
 ## Обновления
 
-Проверка выполняется **при запуске в фоне** (главное окно), но не чаще раза в 12 часов:
-время последней проверки хранится в `%LOCALAPPDATA%\DowntimeGreeting\update-state.json`,
-поэтому частые перезапуски не создают лишних запросов. После ошибки повтор — через 30 минут.
-Режим `--greet` к сети не обращается вообще: плашка при входе в систему не ждёт интернет.
+Проверка выполняется **при каждом запуске** приложения (главное окно), в фоне — плашка
+при входе в систему интернет не ждёт, режим `--greet` к сети не обращается вообще.
 
 Если версия новее установленной, открывается **модальное окно обновления**: заметки к релизу
 с оформлением (заголовки, списки, выделение), текущая и доступная версии, три действия —
@@ -250,8 +248,8 @@ DowntimeGreeting/
 ## Приватность
 
 Приложение работает офлайн. Сеть используется только для проверки обновлений и загрузки
-новой версии: проверка идёт в фоне при запуске главного окна (не чаще раза в 12 часов),
-загрузка — только после явного согласия в модальном окне. Телеметрии нет, фоновых процессов
+новой версии: проверка идёт при каждом запуске главного окна, загрузка — только после явного согласия
+в модальном окне. Телеметрии нет, фоновых процессов
 нет: после показа плашки процесс завершается.
 
 ---
@@ -306,10 +304,8 @@ Remove it with **Remove from autostart** or `.\Uninstall-Task.ps1`.
 
 ### Updates
 
-Checks run **in the background on startup** (main window only), at most once every 12 hours:
-the last check time is kept in `%LOCALAPPDATA%\DowntimeGreeting\update-state.json`, so frequent
-restarts cause no extra requests. After a failure the next attempt is 30 minutes later.
-The `--greet` mode never touches the network — the sign-in plaque does not wait for the internet.
+Checks run **on every app start** (main window only), in the background — the sign-in plaque
+never waits for the internet, and the `--greet` mode does not touch the network at all.
 
 When a newer version exists, a **modal update window** opens with formatted release notes
 (headings, lists, emphasis), the installed and available versions, and three actions:
@@ -347,6 +343,6 @@ file the install still works, but only the size and the `MZ` header are verified
 ### Privacy
 
 The app works offline. The network is used only for update checks and downloading a new version:
-the check runs in the background when the main window starts (at most once every 12 hours),
-and the download happens only after you agree in the modal window. No telemetry, no background
+the check runs whenever the main window starts, and the download happens only after you agree
+in the modal window. No telemetry, no background
 processes: the process exits right after showing the plaque.

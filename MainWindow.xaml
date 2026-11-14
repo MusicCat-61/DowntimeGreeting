@@ -282,13 +282,13 @@
                                            Style="{StaticResource FieldLabelTextStyle}"
                                            Margin="0,14,0,6" />
                                 <TextBox x:Name="PhrasesTextBox"
-                                         Height="132"
+                                         Height="148"
                                          AcceptsReturn="True"
                                          TextWrapping="NoWrap"
                                          VerticalContentAlignment="Top"
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         FontSize="14"
+                                         FontSize="16"
                                          Style="{StaticResource AppTextBoxStyle}" />
 
                                 <StackPanel Margin="0,14,0,0">

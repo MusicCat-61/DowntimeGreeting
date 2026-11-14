@@ -81,7 +81,7 @@
 
     <!-- Обновления -->
     <sys:String x:Key="L_UpdTitle">ОБНОВЛЕНИЯ</sys:String>
-    <sys:String x:Key="L_UpdIdle">Проверка идёт в фоне при запуске приложения — не чаще раза в 12 часов. Кнопка ниже запускает её сразу.</sys:String>
+    <sys:String x:Key="L_UpdIdle">Проверка выполняется при каждом запуске приложения. Кнопка ниже запускает её сразу.</sys:String>
     <sys:String x:Key="L_UpdCheck">Проверить обновления</sys:String>
     <sys:String x:Key="L_UpdChecking">Проверяем…</sys:String>
     <sys:String x:Key="L_UpdUpToDateFormat">Установлена последняя версия {0}.</sys:String>

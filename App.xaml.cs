@@ -50,12 +50,6 @@ public partial class App : Application
     /// <summary>Имя события «активировать главное окно» для передачи запроса первому экземпляру.</summary>
     private const string ActivateWindowEventName = @"Local\DowntimeGreeting.ActivateWindow";
 
-    /// <summary>Интервал между обычными проверками обновлений при запуске.</summary>
-    private static readonly TimeSpan NormalCheckInterval = TimeSpan.FromHours(12);
-
-    /// <summary>Интервал повторной попытки после неудачной проверки обновлений.</summary>
-    private static readonly TimeSpan RetryAfterFailureInterval = TimeSpan.FromMinutes(30);
-
     private Mutex? _instanceMutex;
     private EventWaitHandle? _showGreetingEvent;
     private EventWaitHandle? _activateWindowEvent;
@@ -177,25 +171,18 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Проверяет обновления при запуске, соблюдая интервал между запросами.
+    /// Проверяет обновления при каждом запуске приложения.
     /// </summary>
     /// <remarks>
-    /// Время последней проверки сохраняется в профиле пользователя, поэтому частые запуски
-    /// не создают лишних обращений к GitHub. Ошибки сети не показываются: они попадают в журнал.
+    /// Проверка выполняется при каждом старте: пользователь должен узнавать о новой версии
+    /// сразу, а не через сутки. Ошибки сети не показываются — они попадают в журнал,
+    /// а работа приложения от них не зависит.
     /// </remarks>
     /// <returns>Задача, представляющая асинхронную операцию.</returns>
     private async Task RunStartupUpdateCheckAsync()
     {
         try
         {
-            UpdateService.LoadState();
-
-            if (!UpdateService.IsCheckDue(NormalCheckInterval, RetryAfterFailureInterval))
-            {
-                Log.Debug("Проверка обновлений не требуется: недавно выполнялась");
-                return;
-            }
-
             // Небольшая задержка, чтобы окно успело отрисоваться до сетевого запроса.
             await Task.Delay(TimeSpan.FromSeconds(3), _updateCancellation.Token).ConfigureAwait(true);
 

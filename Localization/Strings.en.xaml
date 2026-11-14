@@ -81,7 +81,7 @@
 
     <!-- Updates -->
     <sys:String x:Key="L_UpdTitle">UPDATES</sys:String>
-    <sys:String x:Key="L_UpdIdle">Checks run in the background on startup, at most once every 12 hours. The button below runs one right now.</sys:String>
+    <sys:String x:Key="L_UpdIdle">Checks run on every app start. The button below runs one right now.</sys:String>
     <sys:String x:Key="L_UpdCheck">Check for updates</sys:String>
     <sys:String x:Key="L_UpdChecking">Checking…</sys:String>
     <sys:String x:Key="L_UpdUpToDateFormat">You have the latest version {0}.</sys:String>

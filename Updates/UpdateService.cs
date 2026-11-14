@@ -169,48 +169,6 @@ public static class UpdateService
     }
 
     /// <summary>
-    /// Загружает сохранённое время последней проверки, чтобы не обращаться к сети при каждом запуске.
-    /// </summary>
-    public static void LoadState()
-    {
-        try
-        {
-            string path = AppPaths.GetUpdateStatePath();
-            if (!File.Exists(path))
-            {
-                return;
-            }
-
-            UpdateState? state = JsonSerializer.Deserialize<UpdateState>(File.ReadAllText(path));
-            if (state?.LastCheckUtc is { } saved && saved <= DateTimeOffset.UtcNow.AddDays(1))
-            {
-                LastCheckUtc = saved;
-            }
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
-        {
-            Log.Warning(ex, "Не удалось прочитать состояние проверки обновлений");
-        }
-    }
-
-    /// <summary>
-    /// Проверяет, пора ли выполнять очередную проверку.
-    /// </summary>
-    /// <param name="normalInterval">Интервал между успешными проверками.</param>
-    /// <param name="retryAfterFailure">Интервал повторной попытки после ошибки.</param>
-    /// <returns><see langword="true"/>, если проверку нужно выполнить.</returns>
-    public static bool IsCheckDue(TimeSpan normalInterval, TimeSpan retryAfterFailure)
-    {
-        if (LastCheckUtc is not { } checkedAt)
-        {
-            return true;
-        }
-
-        TimeSpan interval = LastResult?.Status == UpdateStatus.Failed ? retryAfterFailure : normalInterval;
-        return DateTimeOffset.UtcNow - checkedAt >= interval;
-    }
-
-    /// <summary>
     /// Проверяет наличие новой версии на GitHub.
     /// </summary>
     /// <param name="cancellationToken">Токен отмены.</param>
@@ -224,7 +182,6 @@ public static class UpdateService
 
             LastResult = result;
             LastCheckUtc = DateTimeOffset.UtcNow;
-            SaveState(LastCheckUtc.Value);
 
             Log.Information("Обновления: {State}", Describe(result));
             Checked?.Invoke(null, result);
@@ -923,20 +880,6 @@ public static class UpdateService
         return client;
     }
 
-    private static void SaveState(DateTimeOffset checkedAt)
-    {
-        try
-        {
-            Directory.CreateDirectory(AppPaths.GetApplicationDirectory());
-            string json = JsonSerializer.Serialize(new UpdateState { LastCheckUtc = checkedAt });
-            File.WriteAllText(AppPaths.GetUpdateStatePath(), json, new UTF8Encoding(false));
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            Log.Warning(ex, "Не удалось сохранить состояние проверки обновлений");
-        }
-    }
-
     /// <summary>
     /// Скрипт подмены exe: ждёт выхода приложения, заменяет файл, проверяет результат,
     /// запускает приложение снова и пишет каждый шаг в отчёт. Чистый ASCII.
@@ -1020,11 +963,4 @@ public static class UpdateService
         "ping -n 2 127.0.0.1 >nul 2>nul",
         "exit /b 0"
     ];
-
-    /// <summary>Состояние проверки обновлений, сохраняемое между запусками.</summary>
-    private sealed class UpdateState
-    {
-        /// <summary>Момент последней проверки (UTC).</summary>
-        public DateTimeOffset? LastCheckUtc { get; set; }
-    }
 }

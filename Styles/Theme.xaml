@@ -283,6 +283,40 @@
         <Setter Property="Padding" Value="8,6" />
     </Style>
 
+    <!-- ============================ Индикатор прогресса ============================ -->
+
+    <!-- Без своего шаблона WPF рисует стандартную зелёную полоску, которая выбивается
+         из палитры приложения: заливка должна быть акцентной, дорожка — фоновой. -->
+    <Style x:Key="AppProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border x:Name="Track"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="3" />
+
+                        <Border x:Name="PART_Track" />
+
+                        <Border x:Name="PART_Indicator"
+                                HorizontalAlignment="Left"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="3" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            <Setter TargetName="PART_Indicator" Property="Opacity" Value="0.6" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ============================ Ползунок ============================ -->
 
     <Style x:Key="AppSliderStyle" TargetType="Slider">
