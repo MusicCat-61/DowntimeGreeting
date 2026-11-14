@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>DowntimeGreeting</RootNamespace>
+    <AssemblyName>DowntimeGreeting</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+
+    <!-- Качество кода: предупреждения считаем ошибками. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <!-- Документация: все публичные члены задокументированы через XML-комментарии.
+         CS1591 для сгенерированного XAML-кодом Partial-кода подавляется (см. NoWarn ниже). -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <Deterministic>true</Deterministic>
+    <NeutralLanguage>ru</NeutralLanguage>
+    <Version>1.0.0</Version>
+    <Product>DowntimeGreeting</Product>
+    <Description>Приветственная плашка с длительностью простоя компьютера при включении Windows.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="4.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <!-- System.Diagnostics.EventLog (EventLog, EventLogReader) входит в состав
+         Windows-таргетинга .NET 10, поэтому явная ссылка на пакет не требуется. -->
+    <!-- WMI-фолбэк: Win32_OperatingSystem.LastBootUpTime. -->
+    <PackageReference Include="System.Management" Version="10.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Иконка окон (Icon="app.ico") должна попасть в сборку как ресурс. -->
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Настройки хранятся в %LOCALAPPDATA%\DowntimeGreeting\appsettings.json и создаются
+         при первом запуске: рядом с exe никаких файлов не требуется.
+         Скрипты установки тоже не копируются — публикуется один exe. -->
+    <None Update="app.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="Install-Task.ps1">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="Uninstall-Task.ps1">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

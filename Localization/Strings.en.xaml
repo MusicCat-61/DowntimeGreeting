@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Common -->
+    <sys:String x:Key="L_AppName">DowntimeGreeting</sys:String>
+    <sys:String x:Key="L_AppSubtitle">Greeting when Windows starts</sys:String>
+    <sys:String x:Key="L_Close">Close</sys:String>
+    <sys:String x:Key="L_Language">Interface language</sys:String>
+    <sys:String x:Key="L_About">About</sys:String>
+
+    <!-- Startup -->
+    <sys:String x:Key="L_StartupSection">STARTUP</sys:String>
+    <sys:String x:Key="L_StartupOn">Autostart is on</sys:String>
+    <sys:String x:Key="L_StartupOff">Autostart is off</sys:String>
+    <sys:String x:Key="L_StartupChecking">Checking the scheduled task…</sys:String>
+    <sys:String x:Key="L_StartupBusy">Working…</sys:String>
+    <sys:String x:Key="L_StartupUnknown">Autostart status is unknown</sys:String>
+    <sys:String x:Key="L_StartupHintDefault">The plaque is launched by Windows Task Scheduler and appears right after you sign in.</sys:String>
+    <sys:String x:Key="L_StartupRegisteredFormat">Task “{0}” is registered: the plaque will appear when Windows starts.</sys:String>
+    <sys:String x:Key="L_StartupNotRegistered">Autostart is off: the plaque will not appear automatically.</sys:String>
+    <sys:String x:Key="L_StartupQueryFailed">Could not query Windows Task Scheduler. See the log for details.</sys:String>
+    <sys:String x:Key="L_StartupAdd">Add to autostart</sys:String>
+    <sys:String x:Key="L_StartupRemove">Remove from autostart</sys:String>
+    <sys:String x:Key="L_StartupAddDoneFormat">Done: task “{0}” is registered. The plaque will appear the next time Windows starts.</sys:String>
+    <sys:String x:Key="L_StartupRemoveDoneFormat">Task “{0}” was removed. Autostart is off.</sys:String>
+    <sys:String x:Key="L_StartupFileMissingFormat">File not found: {0}</sys:String>
+    <sys:String x:Key="L_StartupAccessDenied">Could not change the task: access denied. Try running the app as administrator.</sys:String>
+    <sys:String x:Key="L_StartupTaskFileBroken">The task file is missing or corrupted.</sys:String>
+    <sys:String x:Key="L_StartupAlreadyRunning">The task is already running or Task Scheduler is unavailable.</sys:String>
+    <sys:String x:Key="L_StartupGenericFailureFormat">Could not change the task in Task Scheduler (code {0}). See the application log.</sys:String>
+    <sys:String x:Key="L_StartupAddFailed">Could not register the task. See the application log.</sys:String>
+    <sys:String x:Key="L_StartupRemoveFailed">Could not remove the task. See the application log.</sys:String>
+    <sys:String x:Key="L_StartupExeUnknown">Could not resolve the path to DowntimeGreeting.exe. Run the built application.</sys:String>
+
+    <!-- Plaque -->
+    <sys:String x:Key="L_PlaqueSection">PLAQUE</sys:String>
+    <sys:String x:Key="L_PlaquePreviewTitle">Preview the look</sys:String>
+    <sys:String x:Key="L_PlaquePreviewHintFormat">The plaque closes automatically in {0} s.</sys:String>
+    <sys:String x:Key="L_ShowNow">Show now</sys:String>
+
+    <!-- Settings -->
+    <sys:String x:Key="L_SettingsSection">SETTINGS</sys:String>
+    <sys:String x:Key="L_AutoCloseSeconds">Seconds before auto-close</sys:String>
+    <sys:String x:Key="L_AccentColor">Accent color</sys:String>
+    <sys:String x:Key="L_Brightness">Brightness</sys:String>
+    <sys:String x:Key="L_Phrases">Phrases (one per line)</sys:String>
+    <sys:String x:Key="L_SaveSettings">Save settings</sys:String>
+    <sys:String x:Key="L_Saved">Saved</sys:String>
+    <sys:String x:Key="L_SaveFailedFormat">Could not save: {0}</sys:String>
+    <sys:String x:Key="L_SettingsPathFormat">Settings: {0}</sys:String>
+    <sys:String x:Key="L_OpenLogs">Open logs</sys:String>
+    <sys:String x:Key="L_OpenLogsFailed">Could not open the log folder</sys:String>
+    <sys:String x:Key="L_SecondsFormat">{0} s</sys:String>
+    <sys:String x:Key="L_ErrorColor">The accent color must use the #RRGGBB or #AARRGGBB format.</sys:String>
+    <sys:String x:Key="L_ErrorPhrasesEmpty">Add at least one phrase.</sys:String>
+
+    <!-- Plaque content -->
+    <sys:String x:Key="L_GreetingWasOff">Computer was off</sys:String>
+    <sys:String x:Key="L_GreetingRestarted">Computer restarted</sys:String>
+    <sys:String x:Key="L_GreetingLastShutdownFormat">Last shutdown: {0}</sys:String>
+    <sys:String x:Key="L_GreetingRestartFormat">Restart: {0}</sys:String>
+    <sys:String x:Key="L_GreetingClosingFormat">Closing in {0} s · Esc or click to close</sys:String>
+    <sys:String x:Key="L_UnknownDowntime">Could not determine the downtime</sys:String>
+    <sys:String x:Key="L_UnknownShutdown">—</sys:String>
+    <sys:String x:Key="L_LessThanMinute">less than a minute</sys:String>
+    <sys:String x:Key="L_ApproxFormat">≈ {0}</sys:String>
+    <sys:String x:Key="L_ApproxSuffix"> (approx.)</sys:String>
+    <sys:String x:Key="L_DurationDaysFormat">{0}d {1}h {2}m</sys:String>
+    <sys:String x:Key="L_DurationHoursFormat">{0}h {1}m</sys:String>
+    <sys:String x:Key="L_DurationMinutesFormat">{0}m</sys:String>
+
+    <!-- About -->
+    <sys:String x:Key="L_AboutTitle">About</sys:String>
+    <sys:String x:Key="L_AboutVersionFormat">Version {0}</sys:String>
+    <sys:String x:Key="L_AboutDescription">A compact plaque that appears when Windows starts and shows how long the computer was off. Works fully offline, with no background processes and no telemetry.</sys:String>
+    <sys:String x:Key="L_AboutProject">GitHub repository</sys:String>
+    <sys:String x:Key="L_AboutTelegram">Telegram channel</sys:String>
+    <sys:String x:Key="L_AboutDonate">Support the project</sys:String>
+    <sys:String x:Key="L_AboutClose">Close</sys:String>
+
+    <!-- Updates -->
+    <sys:String x:Key="L_UpdTitle">UPDATES</sys:String>
+    <sys:String x:Key="L_UpdIdle">Checks run only when you press the button: the app does not touch the network on startup.</sys:String>
+    <sys:String x:Key="L_UpdCheck">Check for updates</sys:String>
+    <sys:String x:Key="L_UpdChecking">Checking…</sys:String>
+    <sys:String x:Key="L_UpdUpToDateFormat">You have the latest version {0}.</sys:String>
+    <sys:String x:Key="L_UpdAvailableFormat">Version {0} is available.</sys:String>
+    <sys:String x:Key="L_UpdNoReleaseYet">No releases yet — check back later.</sys:String>
+    <sys:String x:Key="L_UpdOpenRelease">Open the release page</sys:String>
+    <sys:String x:Key="L_UpdNoNetwork">Cannot reach GitHub. Check your connection and try again.</sys:String>
+    <sys:String x:Key="L_UpdTimeout">GitHub did not respond in time. Try again later.</sys:String>
+    <sys:String x:Key="L_UpdFailed">Could not check for updates.</sys:String>
+    <sys:String x:Key="L_UpdHttpErrorFormat">GitHub returned code {0}.</sys:String>
+    <sys:String x:Key="L_UpdBadResponse">GitHub returned an unexpected response.</sys:String>
+    <sys:String x:Key="L_UpdBadTagFormat">Could not parse the release version “{0}”.</sys:String>
+
+    <sys:String x:Key="L_ErrorPhrasesEmptyLineFormat">Line {0} is empty: remove blank lines between phrases.</sys:String>
+
+</ResourceDictionary>

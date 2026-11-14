@@ -1,0 +1,14 @@
+# Сборочные артефакты
+bin/
+obj/
+publish/
+
+# Локальные настройки Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# Временные каталоги
+_shots/
+*.log

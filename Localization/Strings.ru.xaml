@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Общие -->
+    <sys:String x:Key="L_AppName">DowntimeGreeting</sys:String>
+    <sys:String x:Key="L_AppSubtitle">Приветствие при включении Windows</sys:String>
+    <sys:String x:Key="L_Close">Закрыть</sys:String>
+    <sys:String x:Key="L_Language">Язык интерфейса</sys:String>
+    <sys:String x:Key="L_About">О программе</sys:String>
+
+    <!-- Автозагрузка -->
+    <sys:String x:Key="L_StartupSection">АВТОЗАГРУЗКА</sys:String>
+    <sys:String x:Key="L_StartupOn">Автозагрузка включена</sys:String>
+    <sys:String x:Key="L_StartupOff">Автозагрузка выключена</sys:String>
+    <sys:String x:Key="L_StartupChecking">Проверяем состояние задачи…</sys:String>
+    <sys:String x:Key="L_StartupBusy">Выполняется…</sys:String>
+    <sys:String x:Key="L_StartupUnknown">Статус автозагрузки неизвестен</sys:String>
+    <sys:String x:Key="L_StartupHintDefault">Плашка запускается через Планировщик Windows — она появится сразу после входа в систему.</sys:String>
+    <sys:String x:Key="L_StartupRegisteredFormat">Задача «{0}» зарегистрирована: плашка будет появляться при входе в Windows.</sys:String>
+    <sys:String x:Key="L_StartupNotRegistered">Автозагрузка выключена: плашка не будет появляться автоматически.</sys:String>
+    <sys:String x:Key="L_StartupQueryFailed">Не удалось опросить Планировщик Windows. Подробности в журнале.</sys:String>
+    <sys:String x:Key="L_StartupAdd">Добавить в автозагрузку</sys:String>
+    <sys:String x:Key="L_StartupRemove">Убрать из автозагрузки</sys:String>
+    <sys:String x:Key="L_StartupAddDoneFormat">Готово: задача «{0}» зарегистрирована. Плашка появится при следующем входе в Windows.</sys:String>
+    <sys:String x:Key="L_StartupRemoveDoneFormat">Задача «{0}» удалена. Автозагрузка отключена.</sys:String>
+    <sys:String x:Key="L_StartupFileMissingFormat">Файл не найден: {0}</sys:String>
+    <sys:String x:Key="L_StartupAccessDenied">Не удалось изменить задачу: доступ запрещён. Попробуйте запустить приложение от имени администратора.</sys:String>
+    <sys:String x:Key="L_StartupTaskFileBroken">Файл задачи не найден или повреждён.</sys:String>
+    <sys:String x:Key="L_StartupAlreadyRunning">Задача уже выполняется либо Планировщик недоступен.</sys:String>
+    <sys:String x:Key="L_StartupGenericFailureFormat">Не удалось изменить задачу в Планировщике (код {0}). Подробности в журнале приложения.</sys:String>
+    <sys:String x:Key="L_StartupAddFailed">Не удалось зарегистрировать задачу. Подробности в журнале приложения.</sys:String>
+    <sys:String x:Key="L_StartupRemoveFailed">Не удалось удалить задачу. Подробности в журнале приложения.</sys:String>
+    <sys:String x:Key="L_StartupExeUnknown">Не удалось определить путь к DowntimeGreeting.exe. Запустите собранное приложение.</sys:String>
+
+    <!-- Плашка -->
+    <sys:String x:Key="L_PlaqueSection">ПЛАШКА</sys:String>
+    <sys:String x:Key="L_PlaquePreviewTitle">Проверить внешний вид</sys:String>
+    <sys:String x:Key="L_PlaquePreviewHintFormat">Плашка автоматически закроется через {0} с.</sys:String>
+    <sys:String x:Key="L_ShowNow">Показать сейчас</sys:String>
+
+    <!-- Настройки -->
+    <sys:String x:Key="L_SettingsSection">НАСТРОЙКИ</sys:String>
+    <sys:String x:Key="L_AutoCloseSeconds">Секунд до автозакрытия</sys:String>
+    <sys:String x:Key="L_AccentColor">Акцентный цвет</sys:String>
+    <sys:String x:Key="L_Brightness">Яркость</sys:String>
+    <sys:String x:Key="L_Phrases">Фразы (по одной в строке)</sys:String>
+    <sys:String x:Key="L_SaveSettings">Сохранить настройки</sys:String>
+    <sys:String x:Key="L_Saved">Сохранено</sys:String>
+    <sys:String x:Key="L_SaveFailedFormat">Не удалось сохранить: {0}</sys:String>
+    <sys:String x:Key="L_SettingsPathFormat">Настройки: {0}</sys:String>
+    <sys:String x:Key="L_OpenLogs">Открыть логи</sys:String>
+    <sys:String x:Key="L_OpenLogsFailed">Не удалось открыть папку журналов</sys:String>
+    <sys:String x:Key="L_SecondsFormat">{0} с</sys:String>
+    <sys:String x:Key="L_ErrorColor">Акцентный цвет должен быть в формате #RRGGBB или #AARRGGBB.</sys:String>
+    <sys:String x:Key="L_ErrorPhrasesEmpty">Добавьте хотя бы одну фразу.</sys:String>
+
+    <!-- Плашка: содержимое -->
+    <sys:String x:Key="L_GreetingWasOff">Компьютер был выключен</sys:String>
+    <sys:String x:Key="L_GreetingRestarted">Компьютер перезагрузился</sys:String>
+    <sys:String x:Key="L_GreetingLastShutdownFormat">Последнее выключение: {0}</sys:String>
+    <sys:String x:Key="L_GreetingRestartFormat">Перезагрузка: {0}</sys:String>
+    <sys:String x:Key="L_GreetingClosingFormat">Закроется через {0} с · Esc или клик — закрыть</sys:String>
+    <sys:String x:Key="L_UnknownDowntime">Не удалось определить простой</sys:String>
+    <sys:String x:Key="L_UnknownShutdown">—</sys:String>
+    <sys:String x:Key="L_LessThanMinute">меньше минуты</sys:String>
+    <sys:String x:Key="L_ApproxFormat">≈ {0}</sys:String>
+    <sys:String x:Key="L_ApproxSuffix"> (прибл.)</sys:String>
+    <sys:String x:Key="L_DurationDaysFormat">{0} д {1} ч {2} мин</sys:String>
+    <sys:String x:Key="L_DurationHoursFormat">{0} ч {1} мин</sys:String>
+    <sys:String x:Key="L_DurationMinutesFormat">{0} мин</sys:String>
+
+    <!-- О программе -->
+    <sys:String x:Key="L_AboutTitle">О программе</sys:String>
+    <sys:String x:Key="L_AboutVersionFormat">Версия {0}</sys:String>
+    <sys:String x:Key="L_AboutDescription">Компактная плашка, которая появляется при входе в Windows и показывает, сколько времени компьютер был выключен. Работает офлайн, без фоновых процессов и телеметрии.</sys:String>
+    <sys:String x:Key="L_AboutProject">Репозиторий на GitHub</sys:String>
+    <sys:String x:Key="L_AboutTelegram">Telegram-канал</sys:String>
+    <sys:String x:Key="L_AboutDonate">Поддержать проект</sys:String>
+    <sys:String x:Key="L_AboutClose">Закрыть</sys:String>
+
+    <!-- Обновления -->
+    <sys:String x:Key="L_UpdTitle">ОБНОВЛЕНИЯ</sys:String>
+    <sys:String x:Key="L_UpdIdle">Проверка выполняется только по кнопке: приложение не обращается к сети при запуске.</sys:String>
+    <sys:String x:Key="L_UpdCheck">Проверить обновления</sys:String>
+    <sys:String x:Key="L_UpdChecking">Проверяем…</sys:String>
+    <sys:String x:Key="L_UpdUpToDateFormat">Установлена последняя версия {0}.</sys:String>
+    <sys:String x:Key="L_UpdAvailableFormat">Доступна версия {0}.</sys:String>
+    <sys:String x:Key="L_UpdNoReleaseYet">Релизов пока нет — проверьте позже.</sys:String>
+    <sys:String x:Key="L_UpdOpenRelease">Открыть страницу релиза</sys:String>
+    <sys:String x:Key="L_UpdNoNetwork">Нет соединения с GitHub. Проверьте интернет и повторите.</sys:String>
+    <sys:String x:Key="L_UpdTimeout">GitHub не ответил вовремя. Повторите попытку позже.</sys:String>
+    <sys:String x:Key="L_UpdFailed">Не удалось проверить обновления.</sys:String>
+    <sys:String x:Key="L_UpdHttpErrorFormat">GitHub вернул код {0}.</sys:String>
+    <sys:String x:Key="L_UpdBadResponse">GitHub вернул неожиданный ответ.</sys:String>
+    <sys:String x:Key="L_UpdBadTagFormat">Не удалось разобрать версию релиза «{0}».</sys:String>
+
+    <sys:String x:Key="L_ErrorPhrasesEmptyLineFormat">Строка {0} пустая: удалите пустые строки между фразами.</sys:String>
+
+</ResourceDictionary>
